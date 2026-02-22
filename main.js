@@ -156,4 +156,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(update);
   }
+
+  // ============================================================
+  // 6. SVG Line Chart Animation
+  // ============================================================
+  const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const svg = entry.target;
+        const area = svg.querySelector('.chart-area');
+        const line = svg.querySelector('.chart-line');
+        const points = svg.querySelectorAll('.chart-point');
+
+        if (area) area.style.opacity = '1';
+        if (line) line.style.strokeDashoffset = '0';
+        points.forEach(point => {
+          point.style.transform = 'scale(1)';
+        });
+
+        chartObserver.unobserve(svg);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const chartSvg = document.querySelector('.chart-line')?.closest('svg');
+  if (chartSvg) {
+    chartObserver.observe(chartSvg);
+  }
 });
